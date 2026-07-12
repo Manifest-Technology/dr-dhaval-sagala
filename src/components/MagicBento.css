@@ -1,0 +1,217 @@
+:root {
+  --glow-color: 212, 160, 23;
+}
+
+/* ========================================================================== */
+/* Base */
+/* ========================================================================== */
+
+.card-grid,
+.bento-section,
+.particle-container,
+.magic-bento-card {
+  width: 100%;
+  height: 100%;
+}
+
+.particle-container {
+  position: relative;
+  overflow: visible;
+  transform-style: preserve-3d;
+  perspective: 1200px;
+}
+
+.magic-bento-card {
+  position: relative;
+
+  isolation: isolate;
+
+  width: 100%;
+  height: 100%;
+
+  /*
+   * Must match TreatmentCard radius.
+   */
+
+  --card-radius: 28px;
+
+  --glow-x: 50%;
+  --glow-y: 50%;
+
+  --glow-intensity: 0;
+
+  --glow-radius: 560px;
+
+  border-radius: var(--card-radius);
+
+  will-change: transform;
+}
+
+@media (min-width: 1024px) {
+  .magic-bento-card {
+    --card-radius: 32px;
+    --glow-radius: 640px;
+  }
+}
+
+@media (max-width: 768px) {
+  .magic-bento-card {
+    --glow-radius: 320px;
+  }
+}
+
+/* ========================================================================== */
+/* Layer 1 — Bright Border Ring */
+/* ========================================================================== */
+
+.magic-bento-card--border-glow::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  padding: 6px;
+
+  border-radius: inherit;
+
+  pointer-events: none;
+
+  z-index: 20;
+
+  background: radial-gradient(
+    var(--glow-radius) circle at var(--glow-x) var(--glow-y),
+    rgba(var(--glow-color), calc(var(--glow-intensity) * 1)) 0%,
+    rgba(var(--glow-color), calc(var(--glow-intensity) * 0.85)) 15%,
+    rgba(var(--glow-color), calc(var(--glow-intensity) * 0.45)) 35%,
+    rgba(var(--glow-color), calc(var(--glow-intensity) * 0.15)) 55%,
+    transparent 72%
+  );
+
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+
+  -webkit-mask-composite: xor;
+
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+
+  mask-composite: exclude;
+
+  opacity: 1;
+
+  transition:
+    opacity 0.25s ease,
+    background 0.15s linear;
+}
+
+/* ========================================================================== */
+/* Layer 2 — Soft Inner Bloom */
+/* ========================================================================== */
+
+.magic-bento-card--border-glow .magic-bento-inner-glow {
+  position: absolute;
+  inset: 0;
+
+  border-radius: inherit;
+
+  pointer-events: none;
+
+  z-index: 5;
+
+  background: radial-gradient(
+    280px circle at var(--glow-x) var(--glow-y),
+    rgba(var(--glow-color), calc(var(--glow-intensity) * 0.08)) 0%,
+    rgba(var(--glow-color), calc(var(--glow-intensity) * 0.04)) 40%,
+    transparent 72%
+  );
+}
+
+/* ========================================================================== */
+/* Layer 3 — Large Outer Aura */
+/* ========================================================================== */
+
+.magic-bento-card--border-glow::after {
+  content: "";
+
+  position: absolute;
+
+  inset: -40px;
+
+  border-radius: calc(var(--card-radius) + 40px);
+
+  pointer-events: none;
+
+  z-index: -1;
+
+  background: radial-gradient(
+    var(--glow-radius) circle at var(--glow-x) var(--glow-y),
+    rgba(var(--glow-color), calc(var(--glow-intensity) * 0.55)) 0%,
+    rgba(var(--glow-color), calc(var(--glow-intensity) * 0.28)) 22%,
+    rgba(var(--glow-color), calc(var(--glow-intensity) * 0.12)) 40%,
+    rgba(var(--glow-color), calc(var(--glow-intensity) * 0.05)) 58%,
+    transparent 76%
+  );
+
+  filter: blur(48px);
+
+  opacity: 1;
+
+  transition:
+    filter 0.25s ease,
+    opacity 0.25s ease;
+}
+
+/* ========================================================================== */
+/* Hover Enhancement */
+/* ========================================================================== */
+
+.magic-bento-card:hover::after {
+  filter: blur(56px);
+}
+
+.magic-bento-card:hover {
+  z-index: 10;
+}
+
+/* ========================================================================== */
+/* Particles */
+/* ========================================================================== */
+
+.particle {
+  will-change: transform, opacity;
+}
+
+.particle::before {
+  content: "";
+
+  position: absolute;
+  inset: -2px;
+
+  border-radius: 9999px;
+
+  background: rgba(var(--glow-color), 0.25);
+
+  z-index: -1;
+}
+
+/* ========================================================================== */
+/* Spotlight */
+/* ========================================================================== */
+
+.global-spotlight {
+  mix-blend-mode: screen;
+
+  pointer-events: none;
+
+  will-change: transform, opacity;
+}
+
+/* ========================================================================== */
+/* Accessibility */
+/* ========================================================================== */
+
+.bento-section {
+  position: relative;
+}
